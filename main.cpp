@@ -1,5 +1,6 @@
 #include<iostream>
-int main(double tfin;int nombre_intervalle;double a;double b;double R;double C;double V0;double Iext;double R;double tau; Vreset, Vth){
+#include "Neuron.cpp"
+int main(double tfin,int nombre_intervalle,double a,double b,double R,double C,double V0,double Iext,double tau,double Vreset,double Vth){
 	Neuron Neu(R,0,tau,V0);
 	int h;
 	h=(tfin)/nombre_intervalle;                                                       //h is the time between two simulations
