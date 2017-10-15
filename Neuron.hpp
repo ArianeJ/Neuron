@@ -9,8 +9,9 @@ class Neuron {
 		double temps;
 		double tau;
 		double tension;
+		bool refractory;
 	public:
-	    double GetTension() const;                                                          //the pgrm doesn't work from that line
+	    double GetTension() const;                                                         
 		void prochaine_tension(double Iext, double h, int n,double Vreset,double Vth);
 		int nombre_pic(double tini,double tfin,double Vth,int n,double h,double Iext,double Vreset);
 };
