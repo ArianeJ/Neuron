@@ -7,6 +7,15 @@ using namespace std;
 
 double Neuron::GetTension() const {       
 	return tension;}
+	
+double Neuron::GetTime() const {
+	return temps;}
+	
+bool Neuron::GetRefr() const {
+	return refractory;}
+	
+void Neuron::SetTension(double V){
+	tension = V;}
 															
 void Neuron::prochaine_tension(double Iext, double h, int n,double Vreset,double Vth){
 	for (int i(1);i<=n;++i){						 		//to make an update of the Neuron features
