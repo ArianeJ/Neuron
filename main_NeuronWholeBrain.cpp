@@ -18,10 +18,10 @@ int main(){
 	double V0(0.0);
 	double Iext(1.01);
 	
-	poisson.gen(Vth*CE*h*J);
+	vector<Neuron>neurons(12500);				//comment initialiser 12500 neurones ? L'usage d'un vecteur...
 	Neuron N1(R,0.0,Tau,V0,false);		//tstart = 0
 	Neuron N2(R,0.0,Tau,V0,false);
-	double globalClock(0);    
+	double globalClock(0);    					//il faut créer les neurones inhibiteurs et excitateurs par hérédité
 	double resultat[3][nombreIntervalle +1];	//n fields mean n+1 fences
 	resultat[0][0]=globalClock;					//tension and time in a table
 	resultat[1][0]=N1.GetTension();
@@ -40,13 +40,13 @@ int main(){
 		if (N2.GetRefr() == true){
 			T2 += globalClock +D;};												
 		if((N1.GetTime()<a) or (N1.GetTime()>b)){			//Iext != 0 in [a,b]
-			N1.ProchaineTension(0,h,1,Vreset,Vth);}			//INCLURE GENERATION DE POISSON DANS UPDATE
+			N1.ProchaineTension(0,h,1,Vreset,Vth,CE,J);}	//Background inclus dans la fonction update
 		else{
-			N1.ProchaineTension(Iext,h,1,Vreset,Vth);}
+			N1.ProchaineTension(Iext,h,1,Vreset,Vth,CE,J);}
 		if((N2.GetTime()<a) or (N2.GetTime()>b)){   		//Iext != 0 in [a,b]
-			N2.ProchaineTension(0,h,1,Vreset,Vth);}
+			N2.ProchaineTension(0,h,1,Vreset,Vth,CE,J);}
 		else{
-			N2.ProchaineTension(Iext,h,1,Vreset,Vth);}
+			N2.ProchaineTension(Iext,h,1,Vreset,Vth,CE,J);}
 		globalClock += h;
 		fichier<<globalClock<<" "<<N1.GetTension()<<" "<<N2.GetTension()<<endl;
 		resultat[0][i]=globalClock;                                              
