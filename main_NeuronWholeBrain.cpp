@@ -5,10 +5,12 @@ int main(){
 	const double Tau(0.02);				//variables initialisees dans le papier															
 	double R(2.0e10);
 	double D(1.5e-3);
+	double d(15);						// D = d * 0.1e-3  (pour aller avec l'incrément unité)
 	double J(0.1e-3);
 	double Vth(2.0e-2);
 	double Vreset(0.0);
-	double h(0.1e-3);
+	double H(0.1e-3);
+	double h(1);						// H = h * 0.1e-3	(incrément unité)
 	double CE(1000);					//nombre de connections venant de neurones excitatory
 	double CI(250);						//nombre de connections venant de neurones inhibitory
 	
@@ -17,40 +19,26 @@ int main(){
 	double b(0.8e-3);
 	double V0(0.0);
 	double Iext(1.01);
+	int Nbr_Neuron(12500);				//nombre de neurons
 	
-	vector<Neuron>neurons(12500);				//comment initialiser 12500 neurones ? L'usage d'un vecteur...
-	Neuron N1(R,0.0,Tau,V0,false);		//tstart = 0
-	Neuron N2(R,0.0,Tau,V0,false);
-	double globalClock(0);    					//il faut créer les neurones inhibiteurs et excitateurs par hérédité
-	double resultat[3][nombreIntervalle +1];	//n fields mean n+1 fences
-	resultat[0][0]=globalClock;					//tension and time in a table
-	resultat[1][0]=N1.GetTension();
-	resultat[2][0]=N2.GetTension();              
+	vector<Neuron>neurons(Nbr_Neuron);	// /!\ comment initialiser 12500 neurones ? L'usage d'un vecteur...
+	Neuron N(R,0.0,Tau,V0,false);		//tstart = 0
+	double globalClock(0);    			//pour obtenir le temps réel, il suffit de faire (globalClock * 0.1e-3)
+										//il faut créer les neurones inhibiteurs et excitateurs par hérédité            
 	                          
-	ofstream fichier("membrane_potential",ios::out);		//create a file in which is stocked tension
-	fichier<<globalClock<<" "<<N1.GetTension()<<" "<<N2.GetTension()<<endl;
-	int T1(1), T2(1);										//valeurs arbitraires pour éviter que les premiers if soient true  => a mettre dans le update
-	for(int i(1);i<nombreIntervalle;++i){
-		if (N1.GetTime() == T1){
-			N1.SetTension(N1.GetTension() + J);};
-		if (N2.GetTime() == T2){
-			N2.SetTension(N2.GetTension() + J);};										
-		if (N1.GetRefr() == true){
-			T1 += globalClock + D;};										
-		if (N2.GetRefr() == true){
-			T2 += globalClock +D;};												
-		if((N1.GetTime()<a) or (N1.GetTime()>b)){			//Iext != 0 in [a,b]
-			N1.ProchaineTension(0,h,1,Vreset,Vth,CE,J);}	//Background inclus dans la fonction update
+	ofstream fichier("membrane_potential",ios::out);	//create a file in which is stocked tension
+	fichier<<globalClock<<" "<<N.GetTension()<<endl;	//y mettre les tensions de tous les neurones
+	double buffer[Nbr_Neuron][nombreIntervalle +1];		//création du buffer
+	
+	for(int i(1);i<nombreIntervalle;++i){										
+		if (N.GetRefr() == true){
+			buffer[globalClock + d][Nlié]+= J;};					//Nlié représente les n° de neurones liés au neurone considéré																	
+		if((N.GetTime()<a) or (N.GetTime()>b)){						//Iext != 0 in [a,b]
+			N.ProchaineTension(0,H,1,Vreset,Vth,CE,J);				//Background et refractory inclus dans la fonction update
+			N.SetTension(N.GetTension() + buffer[N][globalClock]);} //ligne n° N représente le n° du neurone	
 		else{
-			N1.ProchaineTension(Iext,h,1,Vreset,Vth,CE,J);}
-		if((N2.GetTime()<a) or (N2.GetTime()>b)){   		//Iext != 0 in [a,b]
-			N2.ProchaineTension(0,h,1,Vreset,Vth,CE,J);}
-		else{
-			N2.ProchaineTension(Iext,h,1,Vreset,Vth,CE,J);}
+			N.ProchaineTension(Iext,H,1,Vreset,Vth,CE,J);
+			N.SetTension(N.GetTension() + buffer[N][globalClock]);}
 		globalClock += h;
-		fichier<<globalClock<<" "<<N1.GetTension()<<" "<<N2.GetTension()<<endl;
-		resultat[0][i]=globalClock;                                              
-		resultat[1][i]=N1.GetTension();
-		resultat[2][i]=N2.GetTension();};
-	cout<<resultat<<endl;
+																	//Et comment fait-on pour tracer des graphes ?
 return 0 ;}
