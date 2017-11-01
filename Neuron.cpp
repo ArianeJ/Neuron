@@ -7,8 +7,8 @@
 
 using namespace std;
 
-Neuron::Neuron(double R, double t, double tau, double V, bool refr)
-		: resistance(R),temps(t),tau(tau),tension(V),refractory(refr)
+Neuron::Neuron(double R, double t, double tau, double V, bool spik)
+		: resistance(R),temps(t),tau(tau),tension(V),spike(spik)
 		{}
 
 double Neuron::GetTension() const {       
@@ -17,11 +17,17 @@ double Neuron::GetTension() const {
 double Neuron::GetTime() const {
 	return temps;}
 	
+bool Neuron::GetIfSpike() const {
+	return spike;}
+	
 bool Neuron::GetRefr() const {
 	return refractory;}
 	
 void Neuron::SetTension(double V){
 	tension = V;}
+	
+void Neuron::SetRefr(bool refr){
+	refractory = refr;}
 															
 void Neuron::ProchaineTension(double Iext, double h, int n,double Vreset,double Vth,double CE,double J){
 	random_device rd;
@@ -29,11 +35,11 @@ void Neuron::ProchaineTension(double Iext, double h, int n,double Vreset,double 
 	for (int i(1);i<=n;++i){						 		//to make an update of the Neuron features
 		if (tension >=Vth){                             	//if the tension is to high, tension = Vreset
 			tension = Vreset;
-			refractory = true;}
+			spike = true;}
 		else{
 			tension=tension*exp(-h/tau)+Iext*resistance*(1-exp(-h/tau))+ PoissonDistrib(rd);}; // equa diff solution
 			temps= temps + h ;
-			refractory = false;};};
+			spike = false;};};
 			
 int Neuron::NombrePic(double tini,double tfin,double Vth,int n,double h,double Iext,double Vreset,double CE,double J){
 	int pic(0);                                             //pike are counted and stocked with time
@@ -49,3 +55,4 @@ int Neuron::NombrePic(double tini,double tfin,double Vth,int n,double h,double I
 			};
 	cout<<temps_pic<<endl;
 return pic;};
+
