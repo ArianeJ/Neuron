@@ -33,7 +33,9 @@ void Neuron::ProchaineTension(double Iext, double h, int n,double Vreset,double 
 	random_device rd;
 	poisson_distribution<>PoissonDistrib(Vth*CE*h*J);
 	for (int i(1);i<=n;++i){						 		//to make an update of the Neuron features
-		if (tension >=Vth){                             	//if the tension is to high, tension = Vreset
+		if (refractory == true){
+			tension = Vreset;}
+		else if (tension >=Vth){                             	//if the tension is to high, tension = Vreset
 			tension = Vreset;
 			spike = true;}
 		else{
@@ -41,18 +43,5 @@ void Neuron::ProchaineTension(double Iext, double h, int n,double Vreset,double 
 			temps= temps + h ;
 			spike = false;};};
 			
-int Neuron::NombrePic(double tini,double tfin,double Vth,int n,double h,double Iext,double Vreset,double CE,double J){
-	int pic(0);                                             //pike are counted and stocked with time
-	double temps_pic [2][n];
-	for (int i(1);i<=n;++i){
-		ProchaineTension(Iext,h,1, Vreset,Vth,CE,J);                                    
-		temps_pic[0][i-1]=temps;
-			if (tension >=Vth){
-				pic+=1;
-				temps_pic[1][i-1]=1;}                   	//in the table, "1" means pike,  "0" means no pike
-			else {
-				temps_pic[1][i-1]=0;};
-			};
-	cout<<temps_pic<<endl;
 return pic;};
 
