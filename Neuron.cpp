@@ -7,8 +7,8 @@
 
 using namespace std;
 
-Neuron::Neuron(double R, double t, double tau, double V, bool spik)
-		: resistance(R),temps(t),tau(tau),tension(V),spike(spik)
+Neuron::Neuron(double J)		
+		: resistance(2.0e10),temps(0.0),tau(0.02),tension(0.0),spike(false),refractory(false),J(J)
 		{}
 
 double Neuron::GetTension() const {       
@@ -29,19 +29,17 @@ void Neuron::SetTension(double V){
 void Neuron::SetRefr(bool refr){
 	refractory = refr;}
 															
-void Neuron::ProchaineTension(double Iext, double h, int n,double Vreset,double Vth,double CE,double J){
+void Neuron::ProchaineTension(double Iext, double h, int n,double Vreset,double Vth){
 	random_device rd;
-	poisson_distribution<>PoissonDistrib(Vth*CE*h*J);
-	for (int i(1);i<=n;++i){						 		//to make an update of the Neuron features
+	poisson_distribution<>PoissonDistrib(2);
+	for (int i(1);i<=n;++i){
 		if (refractory == true){
 			tension = Vreset;}
-		else if (tension >=Vth){                             	//if the tension is to high, tension = Vreset
+		else if (tension >=Vth){
 			tension = Vreset;
 			spike = true;}
 		else{
-			tension=tension*exp(-h/tau)+Iext*resistance*(1-exp(-h/tau))+ PoissonDistrib(rd);}; // equa diff solution
+			tension=tension*exp(-h/tau)+Iext*resistance*(1-exp(-h/tau))+0.1e-3*PoissonDistrib(rd);};
 			temps= temps + h ;
 			spike = false;};};
 			
-return pic;};
-
