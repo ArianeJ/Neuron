@@ -7,13 +7,13 @@ using namespace std;
 
 class Neuron {
 	private:
-		double resistance;
+		const double resistance;
 		double temps;
-		double tau;
+		const double tau;
 		double tension;
 		bool spike;
 		bool refractory;
-		double J;				//cet attribut va différencier neurone excitateur et neurone inhibiteur
+		const double J;				//cet attribut va différencier neurone excitateur et neurone inhibiteur
 	public:
 	    double GetTension() const;
 	    double GetTime() const;
@@ -21,8 +21,8 @@ class Neuron {
 	    bool GetRefr() const;
 	    void SetTension(double V);
 	    void SetRefr(bool refr);                                                      
-	    void ProchaineTension(double Iext, double h, int n,double Vreset,double Vth,double CE,double J);
-	    Neuron(double R, double t, double tau, double V, bool refr);
+	    void ProchaineTension(double Iext, double h, int n,double Vreset,double Vth);
+	    Neuron(double J);
 };
 
 #endif
