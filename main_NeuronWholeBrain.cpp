@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Neuron.cpp"
+#include "Neuron.hpp"
 #include <random>
 #include <vector>
 #include <cstdlib>
