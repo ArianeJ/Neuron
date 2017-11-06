@@ -5,20 +5,20 @@
 #include <cstdlib>
 #include <fstream>
 int main(){							// informations given in the paper
-	int d(15);						// D = d * 0.1e-3 
-	double Vth(2.0e-2);
-	double Vreset(0.0);
-	double H(0.1e-3);
-	int h(1);						// H = h * 0.1e-3
-	int CE(1000);					//excitatory connection
-	int CI(250);					//inhibitory connection
-	double JI(0.5e-3);				
-	double JE(0.1e-3);				
-	int tref(20);					//Tref = 2 ms
+	int const d(15);						// D = d * 0.1e-3 
+	double const Vth(2.0e-2);
+	double const Vreset(0.0);
+	double const H(0.1e-3);
+	int const h(1);						// H = h * 0.1e-3
+	int const CE(1000);					//excitatory connection
+	int const CI(250);					//inhibitory connection
+	double const JI(0.5e-3);				
+	double const JE(0.1e-3);				
+	int const tref(20);					//Tref = 2 ms
 	
-	int nombreIntervalle(1000);		
-	double Iext(0);
-	int Nbr_Neuron(12000);			
+	int const nombreIntervalle(1000);		
+	double const Iext(0);
+	int const Nbr_Neuron(12000);			
 	
 										
 	
@@ -30,7 +30,7 @@ int main(){							// informations given in the paper
 		neurons.push_back(Neuron(JI));};	//inhibitor neurons
 	int globalClock(0);    					//real time = globalClock * 0.1e-3
 	
-	int connection[Nbr_Neuron][CE+CI];	//	initialization of connections
+	vector<vector<int>>connection(Nbr_Neuron, vector<int>(CE+CI));		//	initialization of connections
 	random_device rd;
 	mt19937 gen(rd());
 	uniform_int_distribution<int>UniformDistribE(0,9999);
@@ -44,8 +44,8 @@ int main(){							// informations given in the paper
 		};
 	};
 	
-	double buffer[Nbr_Neuron][nombreIntervalle +1];	
-	bool refract[Nbr_Neuron][nombreIntervalle +1];		//we guess it is initialized with false
+	vector<vector<double>>buffer(Nbr_Neuron,vector<double>(nombreIntervalle +1));
+	vector<vector<bool>>refract(Nbr_Neuron,vector<bool>(nombreIntervalle +1));		//we guess it is initialized with false
 	                          
 	ofstream file_spikes("spikes");
 		
@@ -78,3 +78,4 @@ int main(){							// informations given in the paper
 		globalClock += h;
 	};
 return 0 ;}
+
