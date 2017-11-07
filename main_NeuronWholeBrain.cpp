@@ -30,7 +30,7 @@ int main(){							// informations given in the paper
 		neurons.push_back(Neuron(JI));};	//inhibitor neurons
 	int globalClock(0);    					//real time = globalClock * 0.1e-3
 	
-	vector<vector<int>>connection(Nbr_Neuron, vector<int>(CE+CI));		//	initialization of connections
+	vector<vector<int> >connection(Nbr_Neuron, vector<int>(CE+CI));		//	initialization of connections
 	random_device rd;
 	mt19937 gen(rd());
 	uniform_int_distribution<int>UniformDistribE(0,9999);
@@ -44,8 +44,8 @@ int main(){							// informations given in the paper
 		};
 	};
 	
-	vector<vector<double>>buffer(Nbr_Neuron,vector<double>(nombreIntervalle +1));
-	vector<vector<bool>>refract(Nbr_Neuron,vector<bool>(nombreIntervalle +1));		//we guess it is initialized with false
+	vector<vector<double> >buffer(Nbr_Neuron,vector<double>(nombreIntervalle +1));
+	vector<vector<bool> >refract(Nbr_Neuron,vector<bool>(nombreIntervalle +1));		//we guess it is initialized with false
 	                          
 	ofstream file_spikes("spikes");
 		
@@ -59,7 +59,7 @@ int main(){							// informations given in the paper
 		};
 		for (int i(10000);i<12500;++i){
 			if (neurons[i].GetIfSpike()== true){
-				for(auto j : connection[i]){
+				for(int j : connection[i]){
 					buffer[j][globalClock + d]+= JI;
 				};
 			};
@@ -78,4 +78,3 @@ int main(){							// informations given in the paper
 		globalClock += h;
 	};
 return 0 ;}
-
