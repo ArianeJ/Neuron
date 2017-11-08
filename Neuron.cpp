@@ -8,7 +8,7 @@
 using namespace std;
 
 Neuron::Neuron(double J)		
-		: resistance(2.0e10),temps(0.0),tau(0.02),tension(0.0),spike(false),refractory(false),J(J)
+		: resistance(2.0e10),temps(0.0),tau(0.02),tension(0.0),spike(false),refractory(false),J(J),buffer(16,0)
 		{}
 
 double Neuron::GetTension() const {       
@@ -19,6 +19,12 @@ double Neuron::GetTime() const {
 
 double Neuron::GetJ() const {
 	return J;}
+	
+void Neuron::CopyBuffer(unsigned int n){
+	tension += buffer[n];}
+	
+void Neuron::SetBuffer(unsigned int n,double a){
+	buffer[n]=a;}
 	
 bool Neuron::GetRefr() const {
 	return refractory;}
