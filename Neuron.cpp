@@ -30,9 +30,8 @@ void Neuron::SetRefr(bool refr){
 	refractory = refr;}
 															
 void Neuron::ProchaineTension(double Iext, double h, int n,double Vreset,double Vth){
-	static random_device rd;
-	static mt19937 gen(rd());
-	static poisson_distribution<>PoissonDistrib(2);
+	random_device rd;
+	poisson_distribution<>PoissonDistrib(2);
 	for (int i(1);i<=n;++i){
 		if (refractory == true){
 			tension = Vreset;}
@@ -40,11 +39,8 @@ void Neuron::ProchaineTension(double Iext, double h, int n,double Vreset,double 
 			tension = Vreset;
 			spike = true;}
 		else{
-			tension=tension*exp(-h/tau)+Iext*resistance*(1-exp(-h/tau))+0.1e-3*PoissonDistrib(gen);};
-			temps= temps + h ;
-spike = false;};}
-		else{
 			tension=tension*exp(-h/tau)+Iext*resistance*(1-exp(-h/tau))+0.1e-3*PoissonDistrib(rd);};
 			temps= temps + h ;
 			spike = false;};};
+			
 			
