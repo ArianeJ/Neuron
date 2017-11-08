@@ -17,11 +17,11 @@ class Neuron {
 	public:
 	    double GetTension() const;
 	    double GetTime() const;
-	    bool GetIfSpike() const;
+	    double GetJ() const;
 	    bool GetRefr() const;
 	    void SetTension(double V);
 	    void SetRefr(bool refr);                                                      
-	    void ProchaineTension(double Iext, double h, int n,double Vreset,double Vth);
+	    bool ProchaineTension(double Iext, double h, int n,double Vreset,double Vth);
 	    Neuron(double J);
 };
 
