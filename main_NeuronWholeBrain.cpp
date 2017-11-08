@@ -29,7 +29,6 @@ int main(){							// informations given in the paper
 	for(int i(10000);i<12500;++i){
 		neurons.push_back(Neuron(JI));};	//inhibitor neurons
 	int globalClock(0);    					//real time = globalClock * 0.1e-3
-	
 	vector<vector<int> >connection(Nbr_Neuron, vector<int>(CE+CI));		//	initialization of connections
 	random_device rd;
 	mt19937 gen(rd());
@@ -43,38 +42,27 @@ int main(){							// informations given in the paper
 			connection[i][j]=UniformDistribJ(gen);
 		};
 	};
-	
 	vector<vector<double> >buffer(Nbr_Neuron,vector<double>(nombreIntervalle +1));
 	vector<vector<bool> >refract(Nbr_Neuron,vector<bool>(nombreIntervalle +1));		//we guess it is initialized with false
 	                          
 	ofstream file_spikes("spikes");
 		
 	for(int k(1);k<nombreIntervalle;++k){				//action
-		for	(int i(0);i<10000;++i){						// 1) spike transmission
-			if (neurons[i].GetIfSpike()== true){
-				for(int elem : connection[i]){
-					buffer[elem][globalClock + d]+= JE;
-				};
-			};
-		};
-		for (int i(10000);i<12500;++i){
-			if (neurons[i].GetIfSpike()== true){
-				for(int j : connection[i]){
-					buffer[j][globalClock + d]+= JI;
-				};
-			};
-		};
-		for(int i(0);i<12000;++i){						// 2) update
+		for(int i(0);i<12000;++i){
 			neurons[i].SetRefr(refract[i][globalClock]);
-			neurons[i].ProchaineTension(Iext,H,1,Vreset,Vth);
 			neurons[i].SetTension(neurons[i].GetTension() + buffer[i][globalClock]);
-			if (neurons[i].GetIfSpike() == true){
+			if (neurons[i].ProchaineTension(Iext,H,1,Vreset,Vth) == true){
+				for(int elem : connection[i]){
+					buffer[elem][globalClock + d]+= neurons[i].GetJ();
+				};
 				for(int j(globalClock);j<globalClock + tref;++j){
 					refract[i][j]=true;
 				};
 				file_spikes<<globalClock<<"\t"<<i<<"\n";
+				cout<<globalClock<<"\t"<<i<<"\n";
 			};
 		};
 		globalClock += h;
 	};
+	file_spikes.close();
 return 0 ;}
