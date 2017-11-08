@@ -16,9 +16,9 @@ double Neuron::GetTension() const {
 	
 double Neuron::GetTime() const {
 	return temps;}
-	
-bool Neuron::GetIfSpike() const {
-	return spike;}
+
+double Neuron::GetJ() const {
+	return J;}
 	
 bool Neuron::GetRefr() const {
 	return refractory;}
@@ -29,18 +29,22 @@ void Neuron::SetTension(double V){
 void Neuron::SetRefr(bool refr){
 	refractory = refr;}
 															
-void Neuron::ProchaineTension(double Iext, double h, int n,double Vreset,double Vth){
-	random_device rd;
-	poisson_distribution<>PoissonDistrib(2);
+bool Neuron::ProchaineTension(double Iext, double h, int n,double Vreset,double Vth){
+	static random_device rd;
+	static mt19937 gen(rd());
+	static poisson_distribution<>PoissonDistrib(2);
 	for (int i(1);i<=n;++i){
 		if (refractory == true){
-			tension = Vreset;}
+			tension = Vreset;
+			spike = false;}
 		else if (tension >=Vth){
 			tension = Vreset;
 			spike = true;}
 		else{
-			tension=tension*exp(-h/tau)+Iext*resistance*(1-exp(-h/tau))+0.1e-3*PoissonDistrib(rd);};
+			tension=tension*exp(-h/tau)+Iext*resistance*(1-exp(-h/tau))+0.1e-3*PoissonDistrib(gen);
+			spike = false;
+			};
 			temps= temps + h ;
-			spike = false;};};
-			
-			
+	}
+	return spike;
+}
