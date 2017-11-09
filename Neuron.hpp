@@ -7,25 +7,25 @@ using namespace std;
 
 class Neuron {
 	private:
-		const double resistance;
-		double temps;
+		const double resistance;	///these 4 attribut are constant caracteristic of the neuron
 		const double tau;
+		const double J;
+		double temps;				///these 2 attribut will change throught experiences
 		double tension;
-		bool spike;
+		bool spike;					///these 2 answer the questions : is the neuron spiking ? Is it refractory ?
 		bool refractory;
-		const double J;				//cet attribut va différencier neurone excitateur et neurone inhibiteur
-		vector<double> buffer
+		vector<double> buffer;		///the vector will serve to register tension the neuron has to get
 	public:
-	    double GetTension() const;
+	    double GetTension() const;	///getter
 	    double GetTime() const;
 	    double GetJ() const;
-		void CopyBuffer(unsigned int n);
-	    void SetBuffer(unsigned int n,double a);
 	    bool GetRefr() const;
-	    void SetTension(double V);
-	    void SetRefr(bool refr);                                                      
-	    bool ProchaineTension(double Iext, double h, int n,double Vreset,double Vth);
-	    Neuron(double J);
+	    void SetTension(double V);	///setter
+	    void SetRefr(bool refr);
+		void CopyBuffer(unsigned int n);	///method linked to the manipulation of the buffer
+	    void SetBuffer(unsigned int n,double a);
+	    bool ProchaineTension(double Iext, double h, int n,double Vreset,double Vth);	///update function
+	    Neuron(double J);			///constructor
 };
 
 #endif
